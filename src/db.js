@@ -11,6 +11,24 @@ const DB_PATH = process.env.DB_PATH || path.join(process.cwd(), "data.db");
 
 const db = new Database(DB_PATH);
 
+// Monkey-patch db.prepare to automatically trigger a cloud backup to Supabase on database writes
+const originalPrepare = db.prepare;
+db.prepare = function(sql) {
+  const stmt = originalPrepare.call(this, sql);
+  const isWrite = /insert|update|delete|replace|alter/i.test(sql);
+  if (isWrite) {
+    const originalRun = stmt.run;
+    stmt.run = function(...args) {
+      const res = originalRun.apply(this, args);
+      if (global.triggerCloudBackup) {
+        global.triggerCloudBackup();
+      }
+      return res;
+    };
+  }
+  return stmt;
+};
+
 // Enable WAL mode untuk performa lebih baik
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
