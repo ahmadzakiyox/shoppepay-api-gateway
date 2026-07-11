@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopeePay Check Payment Dashboard</title>
+  <meta name="description" content="Dashboard admin untuk monitoring pembayaran ShopeePay masuk secara realtime" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="12" fill="url(#grad1)"/>
+            <path d="M12 20L17 25L28 14" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#EE4D2D"/><stop offset="1" stop-color="#FF6B47"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h1>ShopeePay Monitor</h1>
+        <p>Payment Check Dashboard</p>
+      </div>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="login-password">Admin Password</label>
+          <input type="password" id="login-password" placeholder="Masukkan password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn-primary" id="login-btn">
+          <span>Login</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p id="login-error" class="error-text" style="display:none"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="dashboard" class="dashboard" style="display:none">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="12" fill="url(#grad2)"/><path d="M12 20L17 25L28 14" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="grad2" x1="0" y1="0" x2="40" y2="40"><stop stop-color="#EE4D2D"/><stop offset="1" stop-color="#FF6B47"/></linearGradient></defs></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">ShopeePay</span>
+          <span class="brand-sub">Check System</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-tab="overview" id="nav-overview">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="payments" id="nav-payments">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span>Payments</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="live" id="nav-live">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          <span>Live Transaksi</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="create" id="nav-create">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Buat Payment</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="logs" id="nav-logs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Logs</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout" id="logout-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h2 id="page-title">Overview</h2>
+          <span class="badge badge-live" id="status-badge">
+            <span class="pulse"></span> Auto-check aktif
+          </span>
+        </div>
+        <div class="top-bar-right">
+          <button class="btn-icon" id="refresh-btn" title="Refresh">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"/><path d="M20.49,15a9,9,0,1,1-2.12-9.36L23,10"/></svg>
+          </button>
+          <span class="clock" id="clock"></span>
+        </div>
+      </header>
+
+      <!-- Tab: Overview -->
+      <section id="tab-overview" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card stat-total" id="stat-total">
+            <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="stat-info"><span class="stat-value">-</span><span class="stat-label">Total Transaksi</span></div>
+          </div>
+          <div class="stat-card stat-pending" id="stat-pending">
+            <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+            <div class="stat-info"><span class="stat-value">-</span><span class="stat-label">Pending</span></div>
+          </div>
+          <div class="stat-card stat-paid" id="stat-paid">
+            <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></div>
+            <div class="stat-info"><span class="stat-value">-</span><span class="stat-label">Paid</span></div>
+          </div>
+          <div class="stat-card stat-revenue" id="stat-revenue">
+            <div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="stat-info"><span class="stat-value">-</span><span class="stat-label">Total Revenue</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Pembayaran Terbaru</h3>
+            <button class="btn-sm btn-check" id="btn-check-now">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"/><path d="M20.49,15a9,9,0,1,1-2.12-9.36L23,10"/></svg>
+              Cek Sekarang
+            </button>
+          </div>
+          <div class="table-wrapper" id="overview-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Fee</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Waktu</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="overview-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Payments -->
+      <section id="tab-payments" class="tab-content">
+        <div class="card">
+          <div class="card-header"><h3>Semua Pembayaran</h3></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Type</th>
+                  <th>Base</th>
+                  <th>Fee</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Paid At</th>
+                </tr>
+              </thead>
+              <tbody id="payments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Live Transactions -->
+      <section id="tab-live" class="tab-content">
+        <div class="card">
+          <div class="card-header">
+            <h3>🔴 Live Transaksi ShopeePay</h3>
+            <button class="btn-sm btn-primary" id="btn-fetch-live">Fetch Terbaru</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Trx ID</th>
+                  <th>Toko</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Tipe</th>
+                  <th>Waktu</th>
+                </tr>
+              </thead>
+              <tbody id="live-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: Create Payment -->
+      <section id="tab-create" class="tab-content">
+        <div class="card" style="max-width:560px">
+          <div class="card-header"><h3>Buat Payment Baru</h3></div>
+          <form id="create-form">
+            <div class="form-row">
+              <div class="input-group"><label>Order ID (opsional)</label><input type="text" id="cp-order-id" placeholder="ORD-12345" /></div>
+              <div class="input-group"><label>Nama Customer</label><input type="text" id="cp-name" placeholder="Nama pembeli" /></div>
+            </div>
+            <div class="form-row">
+              <div class="input-group"><label>Nominal (Rp) *</label><input type="number" id="cp-amount" placeholder="50000" required min="100" /></div>
+              <div class="input-group">
+                <label>Tipe</label>
+                <select id="cp-type"><option value="order">Order</option><option value="deposit">Deposit</option></select>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">Buat Payment</button>
+          </form>
+          <div id="create-result" style="display:none" class="create-result"></div>
+        </div>
+      </section>
+
+      <!-- Tab: Logs -->
+      <section id="tab-logs" class="tab-content">
+        <div class="card">
+          <div class="card-header"><h3>Cron Check Logs</h3></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr><th>Waktu</th><th>Pending</th><th>Matched</th><th>Expired</th><th>Error</th></tr>
+              </thead>
+              <tbody id="logs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

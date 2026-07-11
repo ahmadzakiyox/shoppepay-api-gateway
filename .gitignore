@@ -1,0 +1,6 @@
+node_modules/
+.env
+shoppepay.db
+shoppepay.db-journal
+*.log
+.DS_Store
